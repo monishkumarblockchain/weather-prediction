@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroPova - Complete Agricultural Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+       
+        body {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            min-height: 100vh;
+            color: #1f2937;
+        }
+       
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+       
+        /* Header Styles */
+        header {
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+       
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+       
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+       
+        .logo-icon {
+            background: #16a34a;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+       
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #166534;
+        }
+       
+        .logo-text p {
+            font-size: 14px;
+            color: #16a34a;
+            margin-top: 2px;
+        }
+       
+        .location {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+       
+        /* Main Content */
+        main {
+            padding: 40px 0 60px;
+        }
+       
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #bbf7d0;
+            margin-bottom: 32px;
+            overflow-x: auto;
+        }
+       
+        .tab {
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #6b7280;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+       
+        .tab.active {
+            color: #166534;
+            border-bottom: 2px solid #16a34a;
+        }
+       
+        .tab:hover:not(.active) {
+            color: #16a34a;
+        }
+       
+        .tab-content {
+            display: none;
+        }
+       
+        .tab-content.active {
+            display: block;
+        }
+       
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+       
+        .card-header {
+            padding: 16px 24px;
+            color: white;
+        }
+       
+        .card-header.ai {
+            background: #16a34a;
+        }
+       
+        .card-header.weather {
+            background: #2563eb;
+        }
+       
+        .card-header.disease {
+            background: #dc2626;
+        }
+       
+        .card-header.plantguard {
+            background: #7c3aed;
+        }
+       
+        .card-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+       
+        .card-header p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+       
+        .card-body {
+            padding: 24px;
+        }
+       
+        /* Chat Section */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+        }
+       
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+       
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+            position: relative;
+        }
+       
+        .message.bot {
+            align-self: flex-start;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-bottom-left-radius: 4px;
+        }
+       
+        .message.user {
+            align-self: flex-end;
+            background: #16a34a;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+       
+        .input-area {
+            display: flex;
+            gap: 12px;
+        }
+       
+        .input-area input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #d1d5db;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+       
+        .input-area input:focus {
+            border-color: #16a34a;
+        }
+       
+        .input-area button {
+            background: #16a34a;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+       
+        .input-area button:hover {
+            background: #15803d;
+        }
+       
+        .knowledge-source {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 8px;
+        }
+       
+        /* Weather Section */
+        .weather-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+       
+        @media (min-width: 768px) {
+            .weather-section {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+       
+        .form-group {
+            margin-bottom: 20px;
+        }
+       
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+       
+        .city-input {
+            display: flex;
+            gap: 8px;
+        }
+       
+        .city-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #d1d5db;
+            border-radius: 12px 0 0 12px;
+            font-size: 16px;
+            outline: none;
+        }
+       
+        .city-input input:focus {
+            border-color: #2563eb;
+        }
+       
+        .city-input button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 0 12px 12px 0;
+            padding: 0 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+       
+        .city-input button:hover {
+            background: #1d4ed8;
+        }
+       
+        .city-input button:disabled {
+            background: #93c5fd;
+            cursor: not-allowed;
+        }
+       
+        .error-message {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #ef4444;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+       
+        .weather-info {
+            background: #eff6ff;
+            padding: 20px;
+            border-radius: 12px;
+        }
+       
+        .weather-info h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #1e40af;
+        }
+       
+        .weather-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+       
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+       
+        .stat-item i {
+            font-size: 20px;
+        }
+       
+        .stat-item.temp i { color: #ef4444; }
+        .stat-item.humidity i { color: #3b82f6; }
+        .stat-item.wind i { color: #6b7280; }
+        .stat-item.rain i { color: #6b7280; }
+       
+        .weather-desc {
+            font-weight: 600;
+            margin-top: 12px;
+        }
+       
+        .weather-desc span {
+            color: #1e40af;
+        }
+       
+        .recommendations h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #166534;
+        }
+       
+        .advice-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+       
+        .advice-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: #f0fdf4;
+            padding: 12px;
+            border-radius: 12px;
+        }
+       
+        .advice-item i {
+            color: #16a34a;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+       
+        .forecast-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+       
+        .forecast-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+       
+        .forecast-stats {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+       
+        .forecast-advice {
+            font-size: 14px;
+        }
+       
+        .forecast-advice ul {
+            list-style-type: disc;
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+       
+        .forecast-advice li {
+            margin-bottom: 4px;
+        }
+       
+        /* Disease Section */
+        .disease-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+       
+        @media (min-width: 768px) {
+            .disease-section {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+       
+        select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #d1d5db;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+       
+        select:focus, textarea:focus {
+            border-color: #dc2626;
+        }
+       
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+       
+        .predict-btn {
+            width: 100%;
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.3s;
+        }
+       
+        .predict-btn:hover:not(:disabled) {
+            background: #b91c1c;
+        }
+       
+        .predict-btn:disabled {
+            background: #fecaca;
+            cursor: not-allowed;
+        }
+       
+        .diagnosis-result {
+            padding: 20px;
+            border-radius: 12px;
+        }
+       
+        .diagnosis-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+        }
+       
+        .diagnosis-success {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+       
+        .diagnosis-info {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            padding: 16px;
+            border-radius: 12px;
+        }
+       
+        .diagnosis-info h3 {
+            color: #b91c1c;
+            margin-bottom: 8px;
+        }
+       
+        .treatment {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 16px;
+            border-radius: 12px;
+        }
+       
+        .treatment h4 {
+            color: #166534;
+            margin-bottom: 8px;
+        }
+       
+        .prevention {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 16px;
+            border-radius: 12px;
+        }
+       
+        .prevention h4 {
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+       
+        .prevention ul {
+            list-style-type: disc;
+            margin-left: 20px;
+            margin-top: 8px;
+            color: #374151;
+        }
+       
+        .prevention li {
+            margin-bottom: 4px;
+        }
+       
+        .placeholder {
+            background: #f3f4f6;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+       
+        .placeholder i {
+            font-size: 48px;
+            color: #9ca3af;
+            margin-bottom: 16px;
+        }
+       
+        .placeholder h3 {
+            font-size: 18px;
+            color: #4b5563;
+            margin-bottom: 8px;
+        }
+       
+        .placeholder p {
+            color: #6b7280;
+            max-width: 400px;
+            line-height: 1.6;
+        }
+       
+        /* PlantGuard AI Section */
+        .plantguard-section {
+            text-align: center;
+        }
+       
+        .app-icon {
+            background: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+       
+        .app-icon i {
+            font-size: 40px;
+            color: #7c3aed;
+        }
+       
+        .main-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+       
+        .main-description {
+            color: #6b7280;
+            font-size: 18px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+       
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+       
+        @media (min-width: 768px) {
+            .action-buttons {
+                flex-direction: row;
+            }
+           
+            .btn {
+                flex: 1;
+            }
+        }
+       
+        .btn {
+            padding: 16px 24px;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+       
+        .btn-camera {
+            background: #7c3aed;
+            color: white;
+        }
+       
+        .btn-camera:hover {
+            background: #6d28d9;
+            transform: scale(1.02);
+        }
+       
+        .btn-upload {
+            background: #2563eb;
+            color: white;
+        }
+       
+        .btn-upload:hover {
+            background: #1d4ed8;
+            transform: scale(1.02);
+        }
+       
+        /* Camera View */
+        .camera-container {
+            background: black;
+            border-radius: 24px;
+            overflow: hidden;
+            margin: 0 auto 24px;
+            max-width: 400px;
+            aspect-ratio: 4/3;
+            position: relative;
+        }
+       
+        #video-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+       
+        .camera-actions {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+       
+        .btn-cancel {
+            background: #6b7280;
+            color: white;
+        }
+       
+        .btn-cancel:hover {
+            background: #4b5563;
+        }
+       
+        .btn-capture {
+            background: #ef4444;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+       
+        .btn-capture:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+       
+        /* Preview View */
+        .preview-image {
+            max-width: 400px;
+            margin: 0 auto 24px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+       
+        .preview-image img {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: contain;
+            display: block;
+        }
+       
+        .preview-actions {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+       
+        .btn-analyze {
+            background: #7c3aed;
+            color: white;
+            min-width: 180px;
+        }
+       
+        .btn-analyze:hover:not(:disabled) {
+            background: #6d28d9;
+            transform: scale(1.02);
+        }
+       
+        .btn-analyze:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+       
+        .loading-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid white;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+       
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+       
+        /* Result View */
+        .result-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+       
+        .severity-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+       
+        .severity-icon {
+            font-size: 24px;
+        }
+       
+        .severity-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+       
+        .severity-healthy {
+            background: #dcfce7;
+            color: #166534;
+        }
+       
+        .severity-low {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+       
+        .severity-moderate {
+            background: #fef3c7;
+            color: #b45309;
+        }
+       
+        .severity-high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+       
+        .disease-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+       
+        .disease-description {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+       
+        .confidence-info {
+            background: #f3f4f6;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: left;
+        }
+       
+        .confidence-info strong {
+            color: #4b5563;
+        }
+       
+        .recommendations {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+       
+        .recommendations h4 {
+            color: #166534;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+       
+        .recommendations ul {
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto;
+            color: #16a34a;
+            font-size: 14px;
+        }
+       
+        .recommendations li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+       
+        .btn-analyze-again {
+            background: #7c3aed;
+            color: white;
+            min-width: 200px;
+        }
+       
+        .btn-analyze-again:hover {
+            background: #6d28d9;
+            transform: scale(1.02);
+        }
+       
+        /* Hidden elements */
+        #file-input {
+            display: none;
+        }
+       
+        .plantguard-views {
+            display: none;
+        }
+       
+        .plantguard-views.active {
+            display: block;
+        }
+       
+        /* Footer */
+        footer {
+            background: #166534;
+            color: #d1fae5;
+            padding: 24px 0;
+            margin-top: 48px;
+        }
+       
+        .footer-content {
+            text-align: center;
+        }
+       
+        .footer-content p {
+            margin-bottom: 8px;
+        }
+       
+        .footer-content .sources {
+            color: #a7f3d0;
+            font-size: 14px;
+        }
+       
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>AgroPova</h1>
+                        <p>Complete Agricultural Assistant</p>
+                    </div>
+                </div>
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="current-location">Sankarankovil</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Tab Navigation -->
+            <div class="tabs">
+                <div class="tab active" data-tab="chat">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>AI Chat</span>
+                </div>
+                <div class="tab" data-tab="weather">
+                    <i class="fas fa-sun"></i>
+                    <span>Weather Advisor</span>
+                </div>
+                <div class="tab" data-tab="disease">
+                    <i class="fas fa-bug"></i>
+                    <span>Disease Predictor</span>
+                </div>
+                <div class="tab" data-tab="plantguard">
+                    <i class="fas fa-camera"></i>
+                    <span>PlantGuard AI</span>
+                </div>
+            </div>
+
+            <!-- Chat Tab Content -->
+            <div class="tab-content active" id="chat-content">
+                <div class="card">
+                    <div class="card-header ai">
+                        <h2>AgroPova AI Assistant</h2>
+                        <p>Powered by FAO, Plantwise & agricultural research</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="chat-container">
+                            <div class="messages" id="messages">
+                                <div class="message bot">
+                                    Hello! I'm AgroPova, your AI agricultural assistant powered by FAO and Plantwise knowledge. How can I help you with farming today?
+                                </div>
+                            </div>
+                            <div class="input-area">
+                                <input type="text" id="message-input" placeholder="Ask about irrigation, soil health, pests, crops, or weather...">
+                                <button id="send-btn">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                            <div class="knowledge-source">
+                                <i class="fas fa-book-open"></i>
+                                <span>Powered by agricultural knowledge from FAO, Plantwise, and ICAR</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather Tab Content -->
+            <div class="tab-content" id="weather-content">
+                <div class="card">
+                    <div class="card-header weather">
+                        <h2>Weather Advisor</h2>
+                        <p>Get farming recommendations based on current weather</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="weather-section">
+                            <div>
+                                <div class="form-group">
+                                    <label for="city-input">Enter Your City</label>
+                                    <div class="city-input">
+                                        <input type="text" id="city-input" value="Sankarankovil" placeholder="e.g., Sankarankovil, Chennai, Delhi">
+                                        <button id="get-weather-btn">Get Weather</button>
+                                    </div>
+                                    <div class="error-message" id="weather-error" style="display: none;">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span id="error-text">City not found or weather service unavailable.</span>
+                                    </div>
+                                </div>
+                               
+                                <div class="weather-info" id="weather-info" style="display: none;">
+                                    <h3>Current Conditions in <span id="city-name">Sankarankovil</span></h3>
+                                    <div class="weather-stats">
+                                        <div class="stat-item temp">
+                                            <i class="fas fa-temperature-high"></i>
+                                            <span id="temp">28°C</span>
+                                        </div>
+                                        <div class="stat-item humidity">
+                                            <i class="fas fa-tint"></i>
+                                            <span id="humidity">65% Humidity</span>
+                                        </div>
+                                        <div class="stat-item wind">
+                                            <i class="fas fa-wind"></i>
+                                            <span id="wind">3.2 m/s Wind</span>
+                                        </div>
+                                        <div class="stat-item rain">
+                                            <i class="fas fa-cloud-rain"></i>
+                                            <span id="rain">0mm Rain</span>
+                                        </div>
+                                    </div>
+                                    <div class="weather-desc">
+                                        Weather: <span id="weather-desc">Clear sky</span>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                            <div>
+                                <h3>Agricultural Recommendations</h3>
+                                <div class="advice-list" id="advice-list">
+                                    <div class="placeholder">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <h3>Weather Data Not Available</h3>
+                                        <p>Enter a city and click "Get Weather" to receive farming recommendations</p>
+                                    </div>
+                                </div>
+                               
+                                <div id="forecast-section" style="display: none; margin-top: 24px;">
+                                    <h3>5-Day Forecast Highlights</h3>
+                                    <div id="forecast-list"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disease Tab Content -->
+            <div class="tab-content" id="disease-content">
+                <div class="card">
+                    <div class="card-header disease">
+                        <h2>Crop Disease Predictor</h2>
+                        <p>Identify diseases and get treatment recommendations</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="disease-section">
+                            <div>
+                                <div class="form-group">
+                                    <label for="crop-select">Select Crop Type</label>
+                                    <select id="crop-select">
+                                        <option value="tomato">Tomato</option>
+                                        <option value="rice">Rice</option>
+                                        <option value="wheat">Wheat</option>
+                                        <option value="maize">Maize</option>
+                                        <option value="cotton">Cotton</option>
+                                    </select>
+                                </div>
+                               
+                                <div class="form-group">
+                                    <label for="symptoms-input">Describe Symptoms</label>
+                                    <textarea id="symptoms-input" placeholder="e.g., yellow spots on leaves, brown rings, wilting, holes in leaves..."></textarea>
+                                    <p class="form-hint">Be specific about symptoms for accurate diagnosis</p>
+                                </div>
+                               
+                                <button class="predict-btn" id="predict-btn">
+                                    <i class="fas fa-search"></i>
+                                    Predict Disease
+                                </button>
+                            </div>
+                           
+                            <div>
+                                <div class="placeholder" id="disease-placeholder">
+                                    <i class="fas fa-bug"></i>
+                                    <h3>Disease Prediction</h3>
+                                    <p>Select your crop type and describe the symptoms you're observing to get an accurate diagnosis and treatment recommendations.</p>
+                                </div>
+                                <div id="disease-result" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PlantGuard AI Tab Content -->
+            <div class="tab-content" id="plantguard-content">
+                <div class="card">
+                    <div class="card-header plantguard">
+                        <h2>PlantGuard AI</h2>
+                        <p>AI-powered plant disease detection using image analysis</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="plantguard-section">
+                            <!-- Home View -->
+                            <div id="plantguard-home" class="plantguard-views active">
+                                <div class="app-icon">
+                                    <i class="fas fa-camera"></i>
+                                </div>
+                                <h2 class="main-title">Plant Disease Detection</h2>
+                                <p class="main-description">Capture a photo of your plant leaves and let our AI detect diseases instantly using advanced image recognition technology</p>
+                               
+                                <div class="action-buttons">
+                                    <button class="btn btn-camera" id="camera-btn">
+                                        <i class="fas fa-camera"></i>
+                                        <span>Use Camera</span>
+                                    </button>
+                                    <button class="btn btn-upload" id="upload-btn">
+                                        <i class="fas fa-upload"></i>
+                                        <span>Upload Image</span>
+                                    </button>
+                                </div>
+                               
+                                <div id="upload-error" class="error-message" style="display: none;"></div>
+                            </div>
+
+                            <!-- Camera View -->
+                            <div id="plantguard-camera" class="plantguard-views">
+                                <h2 class="main-title">Capture Plant Image</h2>
+                                <div class="camera-container">
+                                    <video id="video-preview" autoplay playsinline></video>
+                                </div>
+                                <div class="camera-actions">
+                                    <button class="btn btn-cancel" id="cancel-camera-btn">Cancel</button>
+                                    <button class="btn btn-capture" id="capture-btn">
+                                        <i class="fas fa-circle"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Preview View -->
+                            <div id="plantguard-preview" class="plantguard-views">
+                                <h2 class="main-title">Review Your Photo</h2>
+                                <div class="preview-image">
+                                    <img id="preview-image" src="" alt="Captured plant">
+                                </div>
+                                <div class="preview-actions">
+                                    <button class="btn btn-cancel" id="retake-btn">Choose Different</button>
+                                    <button class="btn btn-analyze" id="analyze-btn">
+                                        <span>Analyze Disease</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Result View -->
+                            <div id="plantguard-result" class="plantguard-views">
+                                <h2 class="main-title">Analysis Results</h2>
+                               
+                                <div class="result-card">
+                                    <div class="severity-container">
+                                        <i class="fas fa-circle-check severity-icon" id="severity-icon"></i>
+                                        <span class="severity-badge" id="severity-badge">Healthy</span>
+                                    </div>
+                                    <h3 class="disease-name" id="disease-name">Healthy</h3>
+                                    <p class="disease-description" id="disease-description">Your plant appears to be healthy!</p>
+                                    <div class="confidence-info">
+                                        <strong>Confidence:</strong> <span id="confidence-value">95</span>%
+                                    </div>
+                                </div>
+
+                                <div class="recommendations">
+                                    <h4>Recommendations:</h4>
+                                    <ul id="recommendations-list">
+                                        <li>• Isolate affected plants to prevent spread</li>
+                                        <li>• Remove and dispose of severely affected leaves</li>
+                                        <li>• Apply appropriate treatment based on diagnosis</li>
+                                        <li>• Monitor plant health regularly</li>
+                                    </ul>
+                                </div>
+
+                                <button class="btn btn-analyze-again" id="analyze-again-btn">
+                                    Analyze Another Plant
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Hidden file input -->
+    <input type="file" id="file-input" accept="image/jpeg,image/jpg,image/png">
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>© 2023 AgroPova. Empowering farmers with AI-driven agricultural insights.</p>
+                <p class="sources">Knowledge sources: FAO, Plantwise, ICAR, USDA Agricultural Research</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and content
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+               
+                // Add active class to clicked tab
+                tab.classList.add('active');
+               
+                // Show corresponding content
+                const tabName = tab.getAttribute('data-tab');
+                document.getElementById(`${tabName}-content`).classList.add('active');
+            });
+        });
+
+        // Chat functionality
+        const messagesContainer = document.getElementById('messages');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function getRelevantKnowledge(query) {
+            const lowerQuery = query.toLowerCase();
+            let relevantTopics = [];
+           
+            const knowledgeBase = {
+                irrigation: [
+                    "Water crops early in the morning or late evening to reduce evaporation losses.",
+                    "Drip irrigation is 30-60% more efficient than traditional flood irrigation methods.",
+                    "Check soil moisture before watering - insert your finger 2 inches deep; if dry, it's time to water.",
+                    "Mulching helps retain soil moisture and reduces irrigation frequency by up to 50%."
+                ],
+                soil: [
+                    "Test your soil every 2-3 years to monitor pH and nutrient levels.",
+                    "Add organic matter like compost or farmyard manure to improve soil structure and fertility.",
+                    "Practice crop rotation to maintain soil health and prevent nutrient depletion.",
+                    "Green manuring with legumes can fix atmospheric nitrogen and improve soil fertility."
+                ],
+                organic: [
+                    "Neem oil is an effective natural pesticide against many common pests and diseases.",
+                    "Companion planting with marigolds can help repel nematodes and other pests.",
+                    "Vermicompost provides essential nutrients and improves soil microbial activity.",
+                    "Crop diversity reduces pest outbreaks and improves overall farm resilience."
+                ],
+                pests: [
+                    "Monitor fields regularly for early pest detection - early intervention is key.",
+                    "Use pheromone traps for monitoring and controlling specific insect pests.",
+                    "Encourage natural predators like ladybugs, spiders, and birds in your farm ecosystem.",
+                    "Rotate pesticides with different modes of action to prevent resistance development."
+                ],
+                crops: [
+                    "Rice requires standing water during the vegetative stage but should be drained before flowering.",
+                    "Tomatoes need consistent watering to prevent blossom end rot and fruit cracking.",
+                    "Wheat responds well to split applications of nitrogen fertilizer at tillering and stem elongation stages.",
+                    "Maize requires adequate zinc application, especially in alkaline soils."
+                ],
+                weather: [
+                    "During heat waves, provide temporary shade for young plants and increase irrigation frequency.",
+                    "Before heavy rainfall, ensure proper drainage to prevent waterlogging and root rot.",
+                    "Frost protection methods include covering plants, using wind machines, or applying anti-transpirants.",
+                    "High humidity periods increase disease risk - ensure proper plant spacing for air circulation."
+                ],
+                farming: [
+                    "Keep detailed farm records of inputs, yields, and weather conditions for better decision making.",
+                    "Intercropping can increase land use efficiency and provide additional income streams.",
+                    "Conservation tillage helps reduce soil erosion and improves water retention.",
+                    "Integrated Pest Management (IPM) combines biological, cultural, and chemical methods for sustainable pest control."
+                ]
+            };
+           
+            if (lowerQuery.includes('water') || lowerQuery.includes('irrigat') || lowerQuery.includes('drip')) {
+                relevantTopics = [...relevantTopics, ...knowledgeBase.irrigation];
+            }
+           
+            if (lowerQuery.includes('soil') || lowerQuery.includes('fertil') || lowerQuery.includes('compost')) {
+                relevantTopics = [...relevantTopics, ...knowledgeBase.soil];
+            }
+           
+            if (lowerQuery.includes('organic') || lowerQuery.includes('natural') || lowerQuery.includes('chemical')) {
+                relevantTopics = [...relevantTopics, ...knowledgeBase.organic];
+            }
+           
+            if (lowerQuery.includes('pest') || lowerQuery.includes('insect') || lowerQuery.includes('disease') || lowerQuery.includes('spray')) {
+                relevantTopics = [...relevantTopics, ...knowledgeBase.pests];
+            }
+           
+            if (lowerQuery.includes('rice') || lowerQuery.includes('wheat') || lowerQuery.includes('tomato') || lowerQuery.includes('maize') || lowerQuery.includes('crop')) {
+                relevantTopics = [...relevantTopics, ...knowledgeBase.crops];
+            }
+           
+            if (lowerQuery.includes('rain') || lowerQuery.includes('heat') || lowerQuery.includes('cold') || lowerQuery.includes('weather') || lowerQuery.includes('temperature')) {
+                relevantTopics = [...relevantTopics, ...knowledgeBase.weather];
+            }
+           
+            if (lowerQuery.includes('farm') || lowerQuery.includes('agricultur') || lowerQuery.includes('grow') || lowerQuery.includes('cultivat')) {
+                relevantTopics = [...relevantTopics, ...knowledgeBase.farming];
+            }
+           
+            if (relevantTopics.length === 0) {
+                relevantTopics = knowledgeBase.farming;
+            }
+           
+            const shuffled = [...relevantTopics].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, 3);
+        }
+
+        function handleSendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+           
+            addMessage(message, 'user');
+            messageInput.value = '';
+           
+            setTimeout(() => {
+                let botResponse = "";
+                const lowerMessage = message.toLowerCase();
+               
+                if (lowerMessage.includes('weather') || lowerMessage.includes('rain') || lowerMessage.includes('temperature') || lowerMessage.includes('forecast')) {
+                    botResponse = "I can provide weather-based farming advice! Please go to the Weather Advisor tab and enter your city name to get personalized recommendations based on current conditions.";
+                }
+                else if (lowerMessage.includes('disease') || lowerMessage.includes('pest') || lowerMessage.includes('spot') || lowerMessage.includes('leaf') || lowerMessage.includes('sick') || lowerMessage.includes('infection')) {
+                    botResponse = "I can help diagnose crop diseases! Please go to the Disease Predictor tab, select your crop type, and describe the symptoms you're observing for accurate identification and treatment recommendations. You can also use the PlantGuard AI tab to analyze plant images!";
+                }
+                else if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
+                    botResponse = "You're welcome! I'm here to help you with all your farming needs. Feel free to ask about weather, crop diseases, irrigation, soil health, or any other agricultural topic!";
+                }
+                else {
+                    const relevantKnowledge = getRelevantKnowledge(message);
+                    botResponse = "Based on agricultural best practices from FAO and Plantwise knowledge sources:\n\n" +
+                                 relevantKnowledge.map(tip => `• ${tip}`).join('\n') +
+                                 "\n\nFor more specific advice, you can also ask about weather conditions or crop diseases using the respective tabs.";
+                }
+               
+                addMessage(botResponse, 'bot');
+            }, 1000);
+        }
+
+        sendBtn.addEventListener('click', handleSendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSendMessage();
+            }
+        });
+
+        // Disease prediction functionality
+        const diseaseDatabase = {
+            tomato: {
+                "yellow spots": {
+                    name: "Early Blight",
+                    cause: "Fungal infection (Alternaria solani)",
+                    solution: "Spray copper-based fungicide every 7 days. Remove infected leaves."
+                },
+                "brown rings": {
+                    name: "Late Blight",
+                    cause: "Fungal infection (Phytophthora infestans)",
+                    solution: "Apply mancozeb spray. Avoid overhead watering."
+                },
+                "wilting": {
+                    name: "Fusarium Wilt",
+                    cause: "Soil-borne fungal disease",
+                    solution: "Use resistant varieties. Practice crop rotation."
+                }
+            },
+            rice: {
+                "yellowing leaves": {
+                    name: "Bacterial Blight",
+                    cause: "Xanthomonas oryzae",
+                    solution: "Use resistant varieties. Apply copper oxychloride."
+                },
+                "brown spots": {
+                    name: "Rice Blast",
+                    cause: "Fungal disease (Magnaporthe oryzae)",
+                    solution: "Apply tricyclazole fungicide. Maintain proper spacing."
+                }
+            }
+        };
+
+        function predictDisease() {
+            const crop = document.getElementById('crop-select').value.toLowerCase();
+            const symptoms = document.getElementById('symptoms-input').value.toLowerCase();
+           
+            if (!symptoms.trim()) return;
+           
+            const diseasePlaceholder = document.getElementById('disease-placeholder');
+            const diseaseResult = document.getElementById('disease-result');
+           
+            diseasePlaceholder.style.display = 'none';
+            diseaseResult.style.display = 'block';
+           
+            if (!diseaseDatabase[crop]) {
+                diseaseResult.innerHTML = `
+                    <div class="diagnosis-result diagnosis-error">
+                        <div style="display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-exclamation-triangle" style="color: #dc2626; margin-top: 4px;"></i>
+                            <div>
+                                <h3 style="color: #b91c1c; font-weight: 600;">Diagnosis Not Found</h3>
+                                <p style="margin-top: 8px;">No disease database available for ${document.getElementById('crop-select').value}. Try tomato or rice.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+           
+            const diseases = diseaseDatabase[crop];
+            let foundDisease = null;
+           
+            for (const [symptomKey, diseaseInfo] of Object.entries(diseases)) {
+                if (symptoms.includes(symptomKey)) {
+                    foundDisease = {
+                        ...diseaseInfo,
+                        crop: document.getElementById('crop-select').value,
+                        symptom: symptomKey
+                    };
+                    break;
+                }
+            }
+           
+            if (foundDisease) {
+                diseaseResult.innerHTML = `
+                    <div class="diagnosis-result diagnosis-success">
+                        <div class="diagnosis-info">
+                            <h3>Diagnosis: ${foundDisease.name}</h3>
+                            <p><strong>Affected Crop:</strong> ${foundDisease.crop}</p>
+                            <p style="margin-top: 8px;"><strong>Symptoms Matched:</strong> ${foundDisease.symptom}</p>
+                            <p style="margin-top: 8px;"><strong>Cause:</strong> ${foundDisease.cause}</p>
+                        </div>
+                       
+                        <div class="treatment">
+                            <h4>Recommended Treatment</h4>
+                            <p>${foundDisease.solution}</p>
+                        </div>
+                       
+                        <div class="prevention">
+                            <h4>Prevention Tips</h4>
+                            <ul>
+                                <li>Practice crop rotation to prevent soil-borne diseases</li>
+                                <li>Use disease-resistant varieties when available</li>
+                                <li>Maintain proper plant spacing for good air circulation</li>
+                                <li>Remove and destroy infected plant material immediately</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            } else {
+                diseaseResult.innerHTML = `
+                    <div class="diagnosis-result diagnosis-error">
+                        <div style="display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-exclamation-triangle" style="color: #dc2626; margin-top: 4px;"></i>
+                            <div>
+                                <h3 style="color: #b91c1c; font-weight: 600;">Diagnosis Not Found</h3>
+                                <p style="margin-top: 8px;">No matching disease found. Please describe symptoms more specifically (e.g., 'yellow spots', 'brown rings', 'wilting').</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        document.getElementById('predict-btn').addEventListener('click', predictDisease);
+
+        // Weather functionality
+        function getWeatherAdvice(temp, humidity, rain, weatherDesc, windSpeed) {
+            const advice = [];
+
+            if (rain > 0) {
+                advice.push("💧 Rain expected – Reduce irrigation to save water.");
+            } else if (temp > 32 && humidity < 50) {
+                advice.push("🌞 Hot & Dry – Irrigation is recommended.");
+            } else {
+                advice.push("✅ Normal conditions – Monitor soil moisture before irrigating.");
+            }
+
+            if (weatherDesc.toLowerCase().includes("rain") || weatherDesc.toLowerCase().includes("shower")) {
+                advice.push("⚠️ Avoid pesticide spraying – Rain may wash it away.");
+            } else if (windSpeed > 4) {
+                advice.push("⚠️ High wind – Spraying pesticides not recommended.");
+            } else {
+                advice.push("🪴 Suitable conditions for spraying pesticides.");
+            }
+
+            if (temp < 20) {
+                advice.push("🥶 Low temperature – Protect crops from cold stress.");
+            } else if (temp > 35) {
+                advice.push("🔥 High temperature – Mulching recommended to retain soil moisture.");
+            }
+
+            return advice;
+        }
+
+        function simulateWeatherData(city) {
+            const normalizedCity = city.toLowerCase().trim();
+           
+            const weatherPatterns = {
+                'chennai': { temp: 32, humidity: 75, wind: 2.5, rain: 0, desc: 'Partly cloudy' },
+                'mumbai': { temp: 30, humidity: 80, wind: 3.0, rain: 5, desc: 'Light rain showers' },
+                'kolkata': { temp: 31, humidity: 78, wind: 2.8, rain: 2, desc: 'Humid and overcast' },
+                'delhi': { temp: 38, humidity: 40, wind: 4.2, rain: 0, desc: 'Clear sky' },
+                'jaipur': { temp: 36, humidity: 35, wind: 3.8, rain: 0, desc: 'Sunny' },
+                'ahmedabad': { temp: 37, humidity: 42, wind: 3.5, rain: 0, desc: 'Clear sky' },
+                'bangalore': { temp: 26, humidity: 60, wind: 2.0, rain: 0, desc: 'Partly cloudy' },
+                'pune': { temp: 28, humidity: 55, wind: 2.2, rain: 0, desc: 'Clear sky' },
+                'hyderabad': { temp: 30, humidity: 58, wind: 2.6, rain: 0, desc: 'Partly cloudy' },
+                'shimla': { temp: 18, humidity: 65, wind: 3.0, rain: 0, desc: 'Cloudy' },
+                'srinagar': { temp: 15, humidity: 70, wind: 2.8, rain: 0, desc: 'Partly cloudy' },
+                'default': { temp: 28, humidity: 65, wind: 3.2, rain: 0, desc: 'Clear sky' }
+            };
+           
+            let pattern = weatherPatterns['default'];
+            for (const [key, value] of Object.entries(weatherPatterns)) {
+                if (normalizedCity.includes(key)) {
+                    pattern = value;
+                    break;
+                }
+            }
+           
+            const temp = Math.round(pattern.temp + (Math.random() - 0.5) * 4);
+            const humidity = Math.max(30, Math.min(90, Math.round(pattern.humidity + (Math.random() - 0.5) * 20)));
+            const wind = Math.max(0.5, Math.round((pattern.wind + (Math.random() - 0.5) * 2) * 10) / 10);
+            const rain = pattern.rain > 0 ? Math.round(Math.random() * 10) : 0;
+           
+            return {
+                city: city,
+                temperature: temp,
+                humidity: humidity,
+                windSpeed: wind,
+                description: pattern.desc,
+                rain: rain,
+                advice: getWeatherAdvice(temp, humidity, rain, pattern.desc, wind)
+            };
+        }
+
+        function updateWeatherDisplay(weatherData) {
+            document.getElementById('city-name').textContent = weatherData.city;
+            document.getElementById('temp').textContent = `${weatherData.temperature}°C`;
+            document.getElementById('humidity').textContent = `${weatherData.humidity}% Humidity`;
+            document.getElementById('wind').textContent = `${weatherData.windSpeed} m/s Wind`;
+            document.getElementById('rain').textContent = `${weatherData.rain}mm Rain`;
+            document.getElementById('weather-desc').textContent = weatherData.description;
+           
+            const adviceList = document.getElementById('advice-list');
+            adviceList.innerHTML = '';
+           
+            weatherData.advice.forEach(advice => {
+                const adviceItem = document.createElement('div');
+                adviceItem.className = 'advice-item';
+                adviceItem.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <span>${advice}</span>
+                `;
+                adviceList.appendChild(adviceItem);
+            });
+           
+            document.getElementById('weather-info').style.display = 'block';
+            document.getElementById('forecast-section').style.display = 'block';
+           
+            const forecastList = document.getElementById('forecast-list');
+            forecastList.innerHTML = '';
+           
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+            const baseTemp = weatherData.temperature;
+            const baseHumidity = weatherData.humidity;
+           
+            for (let i = 0; i < 5; i++) {
+                const tempVariation = Math.round((Math.random() - 0.5) * 6);
+                const humidityVariation = Math.round((Math.random() - 0.5) * 20);
+                const temp = Math.max(15, Math.min(40, baseTemp + tempVariation));
+                const humidity = Math.max(30, Math.min(90, baseHumidity + humidityVariation));
+                const rain = Math.random() > 0.7 ? Math.round(Math.random() * 15) : 0;
+                const wind = Math.max(0.5, Math.round((2 + Math.random() * 4) * 10) / 10);
+               
+                let desc = 'Clear sky';
+                if (rain > 10) desc = 'Heavy rain';
+                else if (rain > 5) desc = 'Light rain';
+                else if (humidity > 75) desc = 'Overcast';
+                else if (humidity > 60) desc = 'Partly cloudy';
+               
+                const advice = getWeatherAdvice(temp, humidity, rain, desc, wind);
+               
+                const forecastItem = document.createElement('div');
+                forecastItem.className = 'forecast-item';
+                forecastItem.innerHTML = `
+                    <div class="forecast-header">
+                        <i class="fas fa-calendar"></i>
+                        <span>${days[i]}, Dec ${15 + i}</span>
+                        <i class="fas fa-clock" style="margin-left: 12px;"></i>
+                        <span>9:00 AM</span>
+                    </div>
+                    <div class="forecast-stats">
+                        ${temp}°C • ${humidity}% humidity • ${rain}mm rain
+                    </div>
+                    <div class="forecast-advice">
+                        <strong>Advice:</strong>
+                        <ul>
+                            <li>${advice[0]}</li>
+                            <li>${advice[1]}</li>
+                        </ul>
+                    </div>
+                `;
+                forecastList.appendChild(forecastItem);
+            }
+           
+            document.getElementById('current-location').textContent = weatherData.city;
+        }
+
+        function getWeather() {
+            const cityInput = document.getElementById('city-input');
+            const city = cityInput.value.trim();
+           
+            if (!city) {
+                document.getElementById('weather-error').style.display = 'flex';
+                document.getElementById('error-text').textContent = 'Please enter a city name';
+                return;
+            }
+           
+            document.getElementById('weather-error').style.display = 'none';
+            const getWeatherBtn = document.getElementById('get-weather-btn');
+            const originalText = getWeatherBtn.innerHTML;
+            getWeatherBtn.innerHTML = '<span class="loading" style="display:inline-block;width:20px;height:20px;border:3px solid rgba(255,255,255,.3);border-radius:50%;border-top-color:#fff;animation:spin 1s ease-in-out infinite;"></span>';
+            getWeatherBtn.disabled = true;
+           
+            setTimeout(() => {
+                try {
+                    const weatherData = simulateWeatherData(city);
+                    updateWeatherDisplay(weatherData);
+                    getWeatherBtn.innerHTML = 'Get Weather';
+                    getWeatherBtn.disabled = false;
+                } catch (error) {
+                    document.getElementById('weather-error').style.display = 'flex';
+                    document.getElementById('error-text').textContent = 'City not found. Please try a major city name.';
+                    getWeatherBtn.innerHTML = 'Get Weather';
+                    getWeatherBtn.disabled = false;
+                }
+            }, 1500);
+        }
+
+        document.getElementById('get-weather-btn').addEventListener('click', getWeather);
+        document.getElementById('city-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                getWeather();
+            }
+        });
+
+        // Initialize with default weather
+        window.addEventListener('load', () => {
+            const weatherData = simulateWeatherData('Sankarankovil');
+            updateWeatherDisplay(weatherData);
+        });
+
+        // PlantGuard AI functionality
+        let currentPlantGuardView = 'home';
+        let capturedImage = null;
+        let cameraStream = null;
+        let isPredicting = false;
+
+        const plantguardHome = document.getElementById('plantguard-home');
+        const plantguardCamera = document.getElementById('plantguard-camera');
+        const plantguardPreview = document.getElementById('plantguard-preview');
+        const plantguardResult = document.getElementById('plantguard-result');
+        const cameraBtn = document.getElementById('camera-btn');
+        const uploadBtn = document.getElementById('upload-btn');
+        const cancelCameraBtn = document.getElementById('cancel-camera-btn');
+        const captureBtn = document.getElementById('capture-btn');
+        const retakeBtn = document.getElementById('retake-btn');
+        const analyzeBtn = document.getElementById('analyze-btn');
+        const analyzeAgainBtn = document.getElementById('analyze-again-btn');
+        const fileInput = document.getElementById('file-input');
+        const uploadError = document.getElementById('upload-error');
+        const videoPreview = document.getElementById('video-preview');
+        const previewImage = document.getElementById('preview-image');
+        const diseaseName = document.getElementById('disease-name');
+        const diseaseDescription = document.getElementById('disease-description');
+        const confidenceValue = document.getElementById('confidence-value');
+        const severityBadge = document.getElementById('severity-badge');
+        const severityIcon = document.getElementById('severity-icon');
+
+        const mockDiseases = [
+            { name: "Healthy", confidence: 95, description: "Your plant appears to be healthy!", severity: "none" },
+            { name: "Apple Scab", confidence: 87, description: "Fungal disease affecting apple trees. Treat with fungicide.", severity: "moderate" },
+            { name: "Tomato Blight", confidence: 92, description: "Serious fungal disease. Remove affected leaves immediately.", severity: "high" },
+            { name: "Powdery Mildew", confidence: 78, description: "Common fungal infection. Improve air circulation around plants.", severity: "low" },
+            { name: "Leaf Spot", confidence: 83, description: "Bacterial infection causing spots on leaves. Prune affected areas.", severity: "moderate" }
+        ];
+
+        function showPlantGuardView(view) {
+            currentPlantGuardView = view;
+           
+            plantguardHome.classList.remove('active');
+            plantguardCamera.classList.remove('active');
+            plantguardPreview.classList.remove('active');
+            plantguardResult.classList.remove('active');
+           
+            if (view === 'home') plantguardHome.classList.add('active');
+            if (view === 'camera') plantguardCamera.classList.add('active');
+            if (view === 'preview') plantguardPreview.classList.add('active');
+            if (view === 'result') plantguardResult.classList.add('active');
+        }
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment' }
+                });
+                cameraStream = stream;
+                videoPreview.srcObject = stream;
+            } catch (error) {
+                console.error('Camera access error:', error);
+                alert('Could not access camera. Please ensure you have granted camera permissions.');
+                showPlantGuardView('home');
+            }
+        }
+
+        function stopCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+        }
+
+        function captureImage() {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+           
+            canvas.width = videoPreview.videoWidth;
+            canvas.height = videoPreview.videoHeight;
+            context.drawImage(videoPreview, 0, 0, canvas.width, canvas.height);
+           
+            capturedImage = canvas.toDataURL('image/jpeg');
+            previewImage.src = capturedImage;
+            stopCamera();
+            showPlantGuardView('preview');
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!validTypes.includes(file.type)) {
+                uploadError.textContent = 'Please upload a valid image file (JPEG, JPG, or PNG)';
+                uploadError.style.display = 'block';
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                uploadError.textContent = 'File size should be less than 5MB';
+                uploadError.style.display = 'block';
+                return;
+            }
+
+            uploadError.style.display = 'none';
+           
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                capturedImage = e.target.result;
+                previewImage.src = capturedImage;
+                showPlantGuardView('preview');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function predictDiseaseFromImage() {
+            isPredicting = true;
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = '<span class="loading-spinner"></span> <span>Analyzing...</span>';
+           
+            setTimeout(() => {
+                const randomDisease = mockDiseases[Math.floor(Math.random() * mockDiseases.length)];
+               
+                diseaseName.textContent = randomDisease.name;
+                diseaseDescription.textContent = randomDisease.description;
+                confidenceValue.textContent = randomDisease.confidence;
+               
+                if (randomDisease.severity === 'none') {
+                    severityBadge.textContent = 'Healthy';
+                    severityBadge.className = 'severity-badge severity-healthy';
+                    severityIcon.className = 'fas fa-circle-check severity-icon';
+                    severityIcon.style.color = '#16a34a';
+                } else if (randomDisease.severity === 'low') {
+                    severityBadge.textContent = 'Low';
+                    severityBadge.className = 'severity-badge severity-low';
+                    severityIcon.className = 'fas fa-triangle-exclamation severity-icon';
+                    severityIcon.style.color = '#3b82f6';
+                } else if (randomDisease.severity === 'moderate') {
+                    severityBadge.textContent = 'Moderate';
+                    severityBadge.className = 'severity-badge severity-moderate';
+                    severityIcon.className = 'fas fa-triangle-exclamation severity-icon';
+                    severityIcon.style.color = '#d97706';
+                } else if (randomDisease.severity === 'high') {
+                    severityBadge.textContent = 'High';
+                    severityBadge.className = 'severity-badge severity-high';
+                    severityIcon.className = 'fas fa-triangle-exclamation severity-icon';
+                    severityIcon.style.color = '#dc2626';
+                }
+               
+                isPredicting = false;
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = '<span>Analyze Disease</span>';
+                showPlantGuardView('result');
+            }, 2000);
+        }
+
+        function resetPlantGuard() {
+            stopCamera();
+            capturedImage = null;
+            uploadError.style.display = 'none';
+            fileInput.value = '';
+            showPlantGuardView('home');
+        }
+
+        // Event Listeners for PlantGuard
+        cameraBtn.addEventListener('click', () => {
+            showPlantGuardView('camera');
+            startCamera();
+        });
+        uploadBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+        fileInput.addEventListener('change', handleFileUpload);
+        cancelCameraBtn.addEventListener('click', resetPlantGuard);
+        captureBtn.addEventListener('click', captureImage);
+        retakeBtn.addEventListener('click', () => {
+            showPlantGuardView('home');
+            capturedImage = null;
+            uploadError.style.display = 'none';
+        });
+        analyzeBtn.addEventListener('click', predictDiseaseFromImage);
+        analyzeAgainBtn.addEventListener('click', resetPlantGuard);
+    </script>
+</body>
+</html>
+
+
+
